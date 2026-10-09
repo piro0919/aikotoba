@@ -42,6 +42,7 @@ export default async function OgImage({
         display: "flex",
         gap: 64,
         height: "100%",
+        justifyContent: "center",
         padding: "0 90px",
         width: "100%",
       }}
@@ -61,10 +62,23 @@ export default async function OgImage({
         >
           Aikotoba
         </div>
-        <div style={{ color: SHU, display: "flex", fontSize: 40, marginTop: 20 }}>
-          {isJa
-            ? "2段階認証のコードを、ブラウザでひと押し"
-            : "Two-factor codes, one click in your browser"}
+        {/* One line runs off the right edge, so break at the comma like the site's heading */}
+        <div
+          style={{
+            color: SHU,
+            display: "flex",
+            flexDirection: "column",
+            fontSize: 40,
+            lineHeight: 1.4,
+            marginTop: 20,
+          }}
+        >
+          {(isJa
+            ? ["2段階認証のコードを、", "ブラウザでひと押し"]
+            : ["Two-factor codes,", "one click in your browser"]
+          ).map((line) => (
+            <div key={line}>{line}</div>
+          ))}
         </div>
       </div>
     </div>,
