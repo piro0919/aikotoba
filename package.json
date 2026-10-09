@@ -1,0 +1,22 @@
+{
+  "name": "aikotoba",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "lint": "web-ext lint --source-dir dist --self-hosted",
+    "start": "web-ext run --source-dir dist"
+  },
+  "devDependencies": {
+    "@types/firefox-webext-browser": "^143.0.1",
+    "@types/node": "^26.6.4",
+    "esbuild": "^0.28.2",
+    "happy-dom": "^20.14.5",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.3",
+    "web-ext": "^10.7.0"
+  }
+}
