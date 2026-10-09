@@ -1,0 +1,19 @@
+{
+  "Metadata": {
+    "title": "Aikotoba",
+    "description": "Get your two-factor codes from the Firefox toolbar without reaching for your phone."
+  },
+  "Hero": {
+    "description": "Get your two-factor codes from the Firefox toolbar without reaching for your phone. Click one to copy it and fill it in.",
+    "download": "Download",
+    "viewOnGithub": "GitHub",
+    "note": "Free · MIT licensed · No network access · Firefox 140+",
+    "title": "Two-factor codes,\none click in your browser.",
+    "migrate": "Coming from Authenticator? Import its backup and you're set."
+  },
+  "Mockup": {
+    "recent": "Recent",
+    "all": "All",
+    "copied": "Copied"
+  }
+}

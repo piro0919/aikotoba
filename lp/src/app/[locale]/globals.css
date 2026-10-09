@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+/* The palette comes from the extension's own icon: the vermilion ground and
+   the off-white bubble. The page sits on the bubble's colour and uses the
+   vermilion for accents, so there is no light/dark switch. */
+@theme inline {
+  --color-paper: #fbf6ec;
+  --color-paper-deep: #f3ead9;
+  --color-shu: #e34a2f;
+  --color-shu-deep: #c63b22;
+  --color-ink-1: #2a1d17;
+  --color-ink-2: #6b5a50;
+  --color-card: #ffffff;
+  --color-card-line: #eadfcc;
+  --color-hairline: rgba(42, 29, 23, 0.14);
+  --font-sans: var(--font-geist-sans);
+  --font-display: var(--font-display);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink-1);
+  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Wrap Japanese at phrase boundaries */
+  word-break: auto-phrase;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-shu) 30%, transparent);
+}
+
+/* The card being clicked in the mockup — the page doing what the extension
+   does. Most of the cycle shows the account name; the "copied" label takes
+   its place for a moment, the way the popup confirms a copy. */
+@keyframes copy-flash {
+  0%,
+  60%,
+  100% {
+    background: var(--color-card);
+  }
+  64%,
+  80% {
+    background: var(--color-paper-deep);
+  }
+}
+
+@keyframes show-name {
+  0%,
+  62%,
+  82%,
+  100% {
+    opacity: 1;
+  }
+  64%,
+  80% {
+    opacity: 0;
+  }
+}
+
+@keyframes show-copied {
+  0%,
+  62%,
+  82%,
+  100% {
+    opacity: 0;
+  }
+  64%,
+  80% {
+    opacity: 1;
+  }
+}
+
+.copy-label {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .copy-card {
+    animation: copy-flash 5s ease-in-out infinite;
+  }
+
+  .copy-name {
+    animation: show-name 5s ease-in-out infinite;
+  }
+
+  .copy-label {
+    animation: show-copied 5s ease-in-out infinite;
+  }
+}
+
+/* The time-left bar under the popup header, running down over one 30-second
+   period like the real one. */
+@keyframes countdown {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+.countdown {
+  transform: scaleX(0.66);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .countdown {
+    animation: countdown 30s linear infinite;
+  }
+}

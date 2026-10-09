@@ -1,0 +1,19 @@
+{
+  "Metadata": {
+    "title": "Aikotoba",
+    "description": "スマートフォンを取り出さずに、Firefox のツールバーから2段階認証のコードを出せる拡張機能です。"
+  },
+  "Hero": {
+    "description": "スマートフォンを取り出さずに、Firefox のツールバーから2段階認証のコードを出せる拡張機能です。押せばコピーして、入力欄にも入れます。",
+    "download": "ダウンロード",
+    "viewOnGithub": "GitHub",
+    "note": "無料 · MIT ライセンス · 通信なし · Firefox 140 以降",
+    "title": "2段階認証のコードを、\nブラウザでひと押し。",
+    "migrate": "Authenticator のバックアップから、そのまま移れます。"
+  },
+  "Mockup": {
+    "recent": "最近",
+    "all": "すべて",
+    "copied": "コピーしました"
+  }
+}

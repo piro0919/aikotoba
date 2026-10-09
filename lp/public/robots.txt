@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://aikotoba.kkweb.io
+
+# Sitemaps
+Sitemap: https://aikotoba.kkweb.io/sitemap.xml
