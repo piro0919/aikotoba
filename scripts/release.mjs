@@ -112,13 +112,23 @@ if (!validated.valid) {
   throw new Error("Validation failed.");
 }
 
-// 3. Create the version
-const created = await api(`/addons/addon/${GUID}/versions/`, {
+// 3. Create the version. The very first release has no add-on on AMO yet,
+// so the versions endpoint 404s; PUT on the add-on creates it with this version.
+let created = await api(`/addons/addon/${GUID}/versions/`, {
   body: JSON.stringify({ upload: uploaded.uuid }),
   headers: { "Content-Type": "application/json" },
   method: "POST",
 });
-const version = await created.json();
+let version = await created.json();
+
+if (created.status === 404) {
+  created = await api(`/addons/addon/${GUID}/`, {
+    body: JSON.stringify({ version: { upload: uploaded.uuid } }),
+    headers: { "Content-Type": "application/json" },
+    method: "PUT",
+  });
+  version = (await created.json()).version ?? {};
+}
 
 if (!created.ok) throw new Error(`Version creation failed: ${JSON.stringify(version)}`);
 

@@ -1,7 +1,13 @@
 {
   "addons": {
     "aikotoba@piro0919": {
-      "updates": []
+      "updates": [
+        {
+          "version": "0.1.0",
+          "update_link": "https://github.com/piro0919/aikotoba/releases/download/v0.1.0/aikotoba-0.1.0.xpi",
+          "update_hash": "sha256:83f90ade383836cb06ec3d47201f5adaf390f432eb695fd1035828acbac8e8b9"
+        }
+      ]
     }
   }
 }
