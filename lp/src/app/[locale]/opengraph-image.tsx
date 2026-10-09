@@ -7,14 +7,14 @@ export const alt = "Aikotoba";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-/* ビルド時に焼く。動的なままだと public/ が関数側に含まれず、
-   本番で icon.png を読めずに 500 になる */
+/* Rendered at build time. Left dynamic, public/ is not bundled with the
+   function and production returns 500 because icon.png can't be read */
 export function generateStaticParams(): { locale: string }[] {
   return routing.locales.map((locale) => ({ locale }));
 }
 
-/* 出るのは kk-web の一覧で176px、X のカードで500px 前後。
-   その大きさで残るのはアイコンと名前と1行だけ。色はアイコンから取る */
+/* Shown at 176px in the kk-web list and around 500px on X cards. At that
+   size only the icon, the name and one line survive. Colours come from the icon */
 const PAPER = "#fbf6ec";
 const INK = "#2a1d17";
 const SHU = "#e34a2f";
@@ -26,8 +26,8 @@ export default async function OgImage({
 }): Promise<ImageResponse> {
   const { locale } = await params;
   const isJa = locale === "ja";
-  /* 見出しの書体はサイトと同じ Zen Maru Gothic。使う文字だけに絞ったものを
-     同梱している。文言を変えたら assets/README.md の手順で作り直す */
+  /* Same heading face as the site, Zen Maru Gothic, bundled as a subset of
+     just the characters used. Rebuild it per assets/README.md when the copy changes */
   const [icon, font] = await Promise.all([
     readFile(join(process.cwd(), "public/icon.png")),
     readFile(join(process.cwd(), "assets/ZenMaruGothic-Bold-subset.ttf")),

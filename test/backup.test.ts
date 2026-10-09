@@ -38,6 +38,31 @@ describe("parseBackup", () => {
   });
 });
 
+describe("parseBackup with bad values", () => {
+  it("skips entries with invalid digits, period or algorithm", () => {
+    const text = JSON.stringify({
+      a: { secret: "MZXW6YTBOI", type: "totp", period: 0 },
+      b: { secret: "MZXW6YTBOI", type: "totp", digits: "abc" },
+      c: { secret: "MZXW6YTBOI", type: "totp", algorithm: 1 },
+      d: { secret: "MZXW6YTBOI", type: "totp" },
+    });
+    const result = parseBackup(text);
+    expect(result.skipped).toBe(3);
+    expect(result.accounts).toHaveLength(1);
+  });
+
+  it("skips only the otpauth line with a broken escape", () => {
+    const text = [
+      "otpauth://totp/100%off%:me?secret=MZXW6YTBOI",
+      "otpauth://totp/GitHub:me?secret=MZXW6YTBOI&period=abc",
+      "otpauth://totp/GitHub:me?secret=MZXW6YTBOI&issuer=",
+    ].join("\n");
+    const result = parseBackup(text);
+    expect(result.skipped).toBe(2);
+    expect(result.accounts.map((a) => a.issuer)).toEqual(["GitHub"]);
+  });
+});
+
 describe("mergeAccounts", () => {
   it("skips accounts already registered", () => {
     const base = { issuer: "A", account: "a", secretHex: "00", digits: 6, period: 30, algorithm: "SHA-1" as const };

@@ -4,10 +4,10 @@ const siteUrl = "https://aikotoba.kkweb.io";
 const locales = ["en", "ja"];
 const defaultLocale = "en";
 
-// 既定の言語は接頭辞なしが正。localePrefix: "as-needed" に合わせる。
-// next-sitemap は Next のビルド出力をそのまま読むので、放っておくと /en を
-// 載せる。/en は実体ではなく / へ 307 で飛ぶ URL なので、canonical と
-// 食い違ったまま Google に渡ることになる
+// The default locale has no prefix, matching localePrefix: "as-needed".
+// next-sitemap reads Next's build output as is, so left alone it lists /en.
+// /en is not a real page but a 307 to /, so Google would get URLs that
+// disagree with the canonical
 function splitLocale(url) {
   const matched = url.match(new RegExp(`^/(${locales.join("|")})(/.*)?$`));
 
@@ -25,7 +25,7 @@ function pathFor(locale, path) {
 module.exports = {
   siteUrl,
   generateRobotsTxt: true,
-  // 画像を返すルートで、ページではない
+  // Routes that return images, not pages
   exclude: ["/opengraph-image", "/*/opengraph-image"],
   transform: async (config, url) => {
     const { locale, path } = splitLocale(url);

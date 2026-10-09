@@ -19,9 +19,9 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
 });
 
-/* 見出しの書体。アイコンのふっくらした吹き出しに合わせて丸ゴシックを当てる。
-   日本語は unicode-range で百件以上に割れるので preload は切る。
-   切らないと使わない範囲まで先読みして 1ページで 1.5MB 取りに行く */
+/* Heading face: a rounded gothic to match the plump bubble in the icon.
+   Japanese splits into 100+ unicode-range chunks, so preload is off;
+   with it on, one page prefetches about 1.5MB of ranges it never uses */
 const displayFont = Zen_Maru_Gothic({
   display: "swap",
   preload: false,

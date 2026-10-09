@@ -5,7 +5,7 @@ Firefox extension that shows TOTP codes. Built to replace the "Authenticator" ex
 ## What the first version does (and only this)
 
 - Popup: a "最近" section with the last 3 copied accounts, then every account sorted by issuer, then account name. The name-sorted list never reorders on use; that stability is the point.
-- Click a card to copy its code and autofill it into the active tab (`src/autofill.ts`, always on, no setting). It guesses the field the same way Authenticator did: OTP-looking name/id/autocomplete → focused input → first empty text input. Split one-digit boxes and inputs inside iframes are not handled.
+- Click a card to copy its code and autofill it into the active tab (`src/autofill.ts`, always on, no setting). Only empty text/number/tel/password inputs (or ones holding an old 6/8-digit code) are candidates, picked in this order: `autocomplete="one-time-code"` → the focused input → an OTP-looking name/id (postal, coupon, promo etc. excluded) → the first non-password input. Split one-digit boxes and inputs inside iframes are not handled.
 - Import page (opened in a tab): reads Authenticator's backup — plain JSON or the one-line `otpauth://` text export.
 
 Grow features only when they are actually missed. Next candidate: adding an account by scanning a QR code.

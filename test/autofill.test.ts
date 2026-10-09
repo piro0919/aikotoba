@@ -47,6 +47,31 @@ describe("fillCode", () => {
     expect(input("otp").value).toBe("123456");
   });
 
+  it("ignores postal and coupon codes", () => {
+    document.body.innerHTML = `<input id="zip" type="text" autocomplete="postal-code"><input id="promo" name="promo_code" type="text"><input id="otp" name="otp" type="text">`;
+    fillCode("123456");
+    expect(input("otp").value).toBe("123456");
+    expect(input("zip").value).toBe("");
+    expect(input("promo").value).toBe("");
+  });
+
+  it("prefers the focused input over a name match", () => {
+    document.body.innerHTML = `<input id="named" name="verification_code" type="text"><input id="b" type="tel">`;
+    input("b").focus();
+    fillCode("123456");
+    expect(input("b").value).toBe("123456");
+    expect(input("named").value).toBe("");
+  });
+
+  it("does not fill a focused checkbox or email field", () => {
+    document.body.innerHTML = `<input id="mail" type="email"><input id="box" type="checkbox" value="on"><input id="otp" name="otp" type="text">`;
+    input("mail").focus();
+    fillCode("123456");
+    expect(input("mail").value).toBe("");
+    expect(input("box").value).toBe("on");
+    expect(input("otp").value).toBe("123456");
+  });
+
   it("fires input and change events", () => {
     document.body.innerHTML = `<input id="otp" name="otp" type="text">`;
     const events: string[] = [];

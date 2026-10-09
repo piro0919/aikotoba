@@ -15,24 +15,37 @@ const ALGORITHMS: Record<string, Algorithm> = {
 };
 
 interface RawEntry {
-  type?: string;
-  secret?: string;
-  issuer?: string;
-  account?: string;
-  digits?: number;
-  period?: number;
-  algorithm?: string;
-  encrypted?: boolean;
-  dataType?: string;
+  type?: unknown;
+  secret?: unknown;
+  issuer?: unknown;
+  account?: unknown;
+  digits?: unknown;
+  period?: unknown;
+  algorithm?: unknown;
+  encrypted?: unknown;
+  dataType?: unknown;
 }
 
 function toAccount(
   type: string,
   secret: string,
-  fields: { issuer?: string; account?: string; digits?: number; period?: number; algorithm?: string },
+  fields: { issuer?: unknown; account?: unknown; digits?: unknown; period?: unknown; algorithm?: unknown },
 ): Omit<Account, "id"> | null {
-  const algorithm = ALGORITHMS[(fields.algorithm ?? "SHA1").toUpperCase().replace("-", "")];
-  if (!algorithm) {
+  const rawAlgorithm = fields.algorithm ?? "SHA1";
+  if (typeof rawAlgorithm !== "string") {
+    return null;
+  }
+  const algorithm = ALGORITHMS[rawAlgorithm.toUpperCase().replace("-", "")];
+  const digits = fields.digits ?? 6;
+  const period = fields.period ?? 30;
+  if (
+    !algorithm ||
+    !Number.isInteger(digits) ||
+    (digits as number) < 6 ||
+    (digits as number) > 10 ||
+    !Number.isInteger(period) ||
+    (period as number) <= 0
+  ) {
     return null;
   }
   let secretHex: string;
@@ -54,11 +67,11 @@ function toAccount(
     return null;
   }
   return {
-    issuer: fields.issuer ?? "",
-    account: fields.account ?? "",
+    issuer: typeof fields.issuer === "string" ? fields.issuer : "",
+    account: typeof fields.account === "string" ? fields.account : "",
     secretHex,
-    digits: fields.digits ?? 6,
-    period: fields.period ?? 30,
+    digits: digits as number,
+    period: period as number,
     algorithm,
   };
 }
@@ -80,10 +93,11 @@ function parseJson(data: Record<string, unknown>): ParseResult {
     if (entry.encrypted || entry.dataType === "EncOTPStorage") {
       throw new EncryptedBackupError();
     }
-    if (!entry.secret) {
+    if (typeof entry.secret !== "string" || entry.secret === "") {
       continue;
     }
-    const account = toAccount(entry.type ?? "totp", entry.secret, entry);
+    const type = typeof entry.type === "string" ? entry.type : "totp";
+    const account = toAccount(type, entry.secret, entry);
     if (account) {
       accounts.push(account);
     } else {
@@ -102,13 +116,14 @@ function parseOtpauthLines(text: string): ParseResult {
       continue;
     }
     let url: URL;
+    let label: string;
     try {
       url = new URL(trimmed);
+      label = decodeURIComponent(url.pathname.replace(/^\//, ""));
     } catch {
       skipped++;
       continue;
     }
-    const label = decodeURIComponent(url.pathname.replace(/^\//, ""));
     const separator = label.indexOf(":");
     const labelIssuer = separator === -1 ? "" : label.slice(0, separator);
     const labelAccount = separator === -1 ? label : label.slice(separator + 1);
@@ -116,7 +131,7 @@ function parseOtpauthLines(text: string): ParseResult {
     const digits = params.get("digits");
     const period = params.get("period");
     const account = toAccount(url.host, params.get("secret") ?? "", {
-      issuer: params.get("issuer") ?? labelIssuer,
+      issuer: params.get("issuer") || labelIssuer,
       account: labelAccount.trim(),
       digits: digits ? Number(digits) : undefined,
       period: period ? Number(period) : undefined,

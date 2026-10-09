@@ -10,7 +10,7 @@ const headerBar = document.getElementById("period")!;
 const DEFAULT_PERIOD = 30;
 
 let recentIds: string[] = [];
-const cards: { account: Account; code: HTMLElement; bar: HTMLElement | null }[] = [];
+const cards: { account: Account; code: HTMLElement; bar: HTMLElement | null; counter: number }[] = [];
 
 importButton.addEventListener("click", async () => {
   await browser.tabs.create({ url: browser.runtime.getURL("import.html") });
@@ -41,10 +41,13 @@ function createCard(account: Account): HTMLElement {
     bar.className = "bar";
     card.append(bar);
   }
-  cards.push({ account, code, bar });
+  cards.push({ account, code, bar, counter: -1 });
 
   card.addEventListener("click", async () => {
-    const value = code.textContent ?? "";
+    // Compute now rather than reading the card, which may be blank before the
+    // first tick or a period behind until the next one.
+    const value = await generateTotp(account.secretHex, account);
+    code.textContent = value;
     await navigator.clipboard.writeText(value);
     autofill(value);
     card.classList.add("copied");
@@ -95,8 +98,13 @@ async function tick() {
   const now = Date.now();
   updateBar(headerBar, DEFAULT_PERIOD, now);
   await Promise.all(
-    cards.map(async ({ account, code, bar }) => {
-      code.textContent = await generateTotp(account.secretHex, { ...account, now });
+    cards.map(async (card) => {
+      const { account, code, bar } = card;
+      const counter = Math.floor(now / 1000 / account.period);
+      if (counter !== card.counter) {
+        card.counter = counter;
+        code.textContent = await generateTotp(account.secretHex, { ...account, now });
+      }
       if (bar) {
         updateBar(bar, account.period, now);
       }
