@@ -1,7 +1,8 @@
-import { Coffee, Download, Github } from "lucide-react";
+import { Coffee, Download } from "lucide-react";
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
+import { GithubMark } from "@/components/GithubMark";
 
 const GITHUB_URL = "https://github.com/piro0919/aikotoba";
 const COFFEE_URL = "https://buymeacoffee.com/piro0919";
@@ -51,7 +52,7 @@ export default async function Page({ params }: PageProps): Promise<ReactNode> {
           className="inline-flex items-center gap-1.5 text-sm text-ink-2 transition-colors hover:text-shu"
           href={GITHUB_URL}
         >
-          <Github size={15} strokeWidth={1.75} />
+          <GithubMark size={15} />
           {t("Hero.viewOnGithub")}
         </a>
       </header>
@@ -77,7 +78,7 @@ export default async function Page({ params }: PageProps): Promise<ReactNode> {
               className="inline-flex items-center justify-center gap-2 rounded-full border border-hairline px-6 py-3.5 text-base font-semibold transition-colors hover:border-shu hover:text-shu"
               href={GITHUB_URL}
             >
-              <Github size={18} strokeWidth={2} />
+              <GithubMark size={18} />
               {t("Hero.viewOnGithub")}
             </a>
           </div>
